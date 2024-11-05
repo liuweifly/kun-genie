@@ -1,6 +1,6 @@
 'use server';
 import { z } from 'zod';
-// import { sql } from '@vercel/postgres';
+import { sql } from '@vercel/postgres';
 
 const FormSchema = z.object({
   // id: z.string(),
@@ -13,7 +13,7 @@ const FormSchema = z.object({
   birthDateTime: z.string(),
 });
 
-const CreateInfo = FormSchema; 
+const CreateCustomerInfo = FormSchema; 
 // const UpdateInfo = FormSchema.omit({ id: true, birthDateTime: true });
 
 export type State = {
@@ -30,18 +30,18 @@ export type State = {
   };
 };
 
-export async function createInfo(prevState: State, formData: FormData): Promise<State> {
+export async function createCustomerInfo(prevState: State, formData: FormData): Promise<State> {
   const rawFormData = {
     name: formData.get('name'),
     birthDateTime: formData.get('birthDateTime'),
     gender: formData.get('gender'),
   };
   //在当前页面展示form中的信息
-  const validatedFields = CreateInfo.safeParse(rawFormData);
+  const validatedFields = CreateCustomerInfo.safeParse(rawFormData);
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Missing Fields. Failed to Create Info.',
+      message: 'Missing Fields. Failed to Create Customer Info.',
       values: {
         name: formData.get('name')?.toString(),
         birthDateTime: formData.get('birthDateTime')?.toString(),
@@ -53,18 +53,21 @@ export async function createInfo(prevState: State, formData: FormData): Promise<
   //如果填写数据正确，则返回成功信息和空错误信息以及填写信息
   return { message: 'Success!', errors: {}, values: validatedFields.data };
 
-  // 插入info到数据库中 
+  //插入info到数据库中        
   // const { name, gender, birthDateTime } = validatedFields.data;
+  // const userId = '76d65c26-f784-44a2-ac19-586678f7c2f2';
 
   // try {
   //   await sql`
-  //     INSERT INTO info (name, gender, birthDateTime)
-  //     VALUES (${name}, ${gender}, ${birthDateTime})
+  //     INSERT INTO customerInfo (name, gender, birthDateTime, userId)
+  //     VALUES (${name}, ${gender}, ${birthDateTime}, ${userId})
   //   `;
-  //   return { message: 'Success!', errors: {}, values: {} };
+  //   // console.log('Success!', validatedFields.data);
+  //   return { message: 'Success!', errors: {}, values: validatedFields.data};
   // } catch (error) {
+  //   console.error('Error:', error);
   //   return {
-  //     message: 'Database Error: Failed to Create Info.',
+  //     message: 'Database Error: Failed to Create Customer Info.',
   //     // errors: {},
   //     // values: {}
   //   };

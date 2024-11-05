@@ -1,12 +1,13 @@
 'use client'
 
-import { createInfo, State } from "./lib/actions";
+import { createCustomerInfo, State } from "./lib/actions";
 import { useActionState } from 'react';
+import LuckDiv from './ui/luck-div';
 
 export default function Home() {
 
   const initialState: State = { message: null, errors: {}, values: {} };
-  const [state, formAction] = useActionState(createInfo, initialState);
+  const [state, formAction] = useActionState(createCustomerInfo, initialState);
 
   return (
     <div className="p-6">
@@ -21,6 +22,7 @@ export default function Home() {
               name="name"
               className="w-full border rounded-md p-2"
               required
+              defaultValue={state.values?.name || ''}
             />
           </div>
 
@@ -32,6 +34,7 @@ export default function Home() {
               name="birthDateTime"
               className="w-full border rounded-md p-2"
               required
+              defaultValue={state.values?.birthDateTime || ''}
             />
           </div>
 
@@ -39,11 +42,22 @@ export default function Home() {
             <label className="block mb-2">Gender</label>
             <div className="space-x-4">
               <label className="inline-flex items-center">
-                <input type="radio" name="gender" value="male" required />
+                <input 
+                  type="radio" 
+                  name="gender" 
+                  value="male" 
+                  required
+                  defaultChecked={state.values?.gender === 'male'}
+                />
                 <span className="ml-2">Male</span>
               </label>
               <label className="inline-flex items-center">
-                <input type="radio" name="gender" value="female" />
+                <input 
+                  type="radio" 
+                  name="gender" 
+                  value="female"
+                  defaultChecked={state.values?.gender === 'female'}
+                />
                 <span className="ml-2">Female</span>
               </label>
             </div>
@@ -56,6 +70,8 @@ export default function Home() {
           </div>
         </div>
       </form>
+      <LuckDiv values={state.values ?? {}} /> 
+      
     </div>
   );
 }
