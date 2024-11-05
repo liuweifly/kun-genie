@@ -11,7 +11,7 @@ export default function Home() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl mb-6">今日运势</h1>
+      <h1 className="text-2xl mb-6 text-center">今日运势</h1>
       <form action={formAction}>
         <div className="space-y-4">
           <div>
@@ -20,7 +20,7 @@ export default function Home() {
               type="text"
               id="name"
               name="name"
-              className="w-full border rounded-md p-2"
+              className="w-full border rounded-md p-2 text-black"
               required
               defaultValue={state.values?.name || ''}
             />
@@ -32,7 +32,7 @@ export default function Home() {
               type="datetime-local"
               id="birthDateTime"
               name="birthDateTime"
-              className="w-full border rounded-md p-2"
+              className="w-full border rounded-md p-2 text-black"
               required
               defaultValue={state.values?.birthDateTime || ''}
             />

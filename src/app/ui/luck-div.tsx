@@ -11,16 +11,20 @@ interface Values {
 export default function LuckDiv({ values }: { values: Values }) {
     const [bazi, setBazi] = useState<string>('');
     const [fortune, setFortune] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [loadStartTime, setLoadStartTime] = useState<number>(0);
+    const [elapsedTime, setElapsedTime] = useState<number>(0);
 
     useEffect(() => {
         if (values.birthDateTime) {
-            // 解析日期时间字符串
+            setIsLoading(true);
+            setLoadStartTime(Date.now());
+            setFortune('');
+            
             const date = new Date(values.birthDateTime);
             
-            // 转换为阴历
             const lunar = Lunar.fromDate(date);
             
-            // 获取八字
             const baziInfo = {
                 year: lunar.getYearInGanZhi(),
                 month: lunar.getMonthInGanZhi(),
@@ -28,9 +32,7 @@ export default function LuckDiv({ values }: { values: Values }) {
                 time: lunar.getTimeInGanZhi(),
             };
             
-            // 格式化八字显示
-            const baziString = `
-                姓名：${values.name}
+            const baziString = `姓名：${values.name}
                 性别：${values.gender === 'male' ? '男' : '女'}
                 阳历：${date.toLocaleString()}
                 农历：${lunar.toString()}
@@ -39,19 +41,30 @@ export default function LuckDiv({ values }: { values: Values }) {
             
             setBazi(baziString);
 
-            // 调用服务器端函数获取运势
             const fetchFortune = async () => {
                 try {
                     const result = await getFortune(values);
                     setFortune(result.text);
                 } catch (error) {
                     console.error('获取运势失败:', error);
+                } finally {
+                    setIsLoading(false);
                 }
             };
 
             fetchFortune();
         }
     }, [values]);
+
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
+        if (isLoading) {
+            timer = setInterval(() => {
+                setElapsedTime(Math.floor((Date.now() - loadStartTime) / 1000));
+            }, 1000);
+        }
+        return () => clearInterval(timer);
+    }, [isLoading, loadStartTime]);
 
     return (
         <div className="mt-6 space-y-6">
@@ -66,14 +79,18 @@ export default function LuckDiv({ values }: { values: Values }) {
                 )}
             </div>
             
-            {fortune && (
-                <div className="p-4 border rounded-md">
-                    <h2 className="text-xl mb-4">每日运势分析</h2>
-                    <div className="whitespace-pre-line">
-                        {fortune}
-                    </div>
+            <div className="p-4 border rounded-md">
+                <h2 className="text-xl mb-4">每日运势分析</h2>
+                <div className="whitespace-pre-line">
+                    {bazi ? (
+                        isLoading ? (
+                            <>
+                                正在加载中... ({elapsedTime} 秒)
+                            </>
+                        ) : fortune
+                    ) : null}
                 </div>
-            )}
+            </div>
         </div>
     );
 }
