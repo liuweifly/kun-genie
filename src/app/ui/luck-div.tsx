@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Lunar } from 'lunar-typescript'; // 需要安装这个包
+import { Lunar } from 'lunar-typescript';
+import { getFortune } from "../lib/actions";
 
 interface Values {
     birthDateTime?: string;
@@ -9,6 +10,7 @@ interface Values {
 
 export default function LuckDiv({ values }: { values: Values }) {
     const [bazi, setBazi] = useState<string>('');
+    const [fortune, setFortune] = useState<string>('');
 
     useEffect(() => {
         if (values.birthDateTime) {
@@ -20,10 +22,10 @@ export default function LuckDiv({ values }: { values: Values }) {
             
             // 获取八字
             const baziInfo = {
-                year: lunar.getYearInGanZhi(), // 年柱
-                month: lunar.getMonthInGanZhi(), // 月柱
-                day: lunar.getDayInGanZhi(), // 日柱
-                time: lunar.getTimeInGanZhi(), // 时柱
+                year: lunar.getYearInGanZhi(),
+                month: lunar.getMonthInGanZhi(),
+                day: lunar.getDayInGanZhi(),
+                time: lunar.getTimeInGanZhi(),
             };
             
             // 格式化八字显示
@@ -36,18 +38,41 @@ export default function LuckDiv({ values }: { values: Values }) {
             `;
             
             setBazi(baziString);
+
+            // 调用服务器端函数获取运势
+            const fetchFortune = async () => {
+                try {
+                    const result = await getFortune(values);
+                    setFortune(result.text);
+                } catch (error) {
+                    console.error('获取运势失败:', error);
+                }
+            };
+
+            fetchFortune();
         }
-    }, [values]); // 当 values 变化时重新计算
+    }, [values]);
 
     return (
-        <div className="mt-6 p-4 border rounded-md">
-            <h2 className="text-xl mb-4">八字分析</h2>
-            {bazi ? (
-                <pre className="whitespace-pre-line">
-                    {bazi}
-                </pre>
-            ) : (
-                <p>请输入出生日期时间</p>
+        <div className="mt-6 space-y-6">
+            <div className="p-4 border rounded-md">
+                <h2 className="text-xl mb-4">八字分析</h2>
+                {bazi ? (
+                    <pre className="whitespace-pre-line">
+                        {bazi}
+                    </pre>
+                ) : (
+                    <p>请输入出生日期时间</p>
+                )}
+            </div>
+            
+            {fortune && (
+                <div className="p-4 border rounded-md">
+                    <h2 className="text-xl mb-4">每日运势分析</h2>
+                    <div className="whitespace-pre-line">
+                        {fortune}
+                    </div>
+                </div>
             )}
         </div>
     );

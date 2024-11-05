@@ -64,7 +64,7 @@ export default function Home() {
           </div>
 
           <div className="mt-6">
-            <button type="submit" className="w-full bg-black text-white rounded-md p-2">
+            <button type="submit" className="w-full bg-black text-white rounded-md p-2 border border-gray-200">
               查看
             </button>
           </div>

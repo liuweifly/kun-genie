@@ -1,6 +1,7 @@
 'use server';
 import { z } from 'zod';
 import { sql } from '@vercel/postgres';
+import { Lunar } from 'lunar-typescript';
 
 const FormSchema = z.object({
   // id: z.string(),
@@ -72,4 +73,68 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
   //     // values: {}
   //   };
   // }
+}
+
+// 新增获取运势的函数
+export async function getFortune(values: {
+  name?: string;
+  birthDateTime?: string;
+  gender?: string;
+}) {
+  try {
+    if (!values.birthDateTime) {
+      throw new Error('出生日期时间不能为空');
+    }
+
+    // 解析日期时间字符串
+    const date = new Date(values.birthDateTime);
+    
+    // 转换为阴历
+    const lunar = Lunar.fromDate(date);
+    
+    // 获取八字
+    const baziInfo = {
+      year: lunar.getYearInGanZhi(),
+      month: lunar.getMonthInGanZhi(),
+      day: lunar.getDayInGanZhi(),
+      time: lunar.getTimeInGanZhi(),
+    };
+
+    // 组合成查询字符串
+    const query = `姓名：${values.name}，性别：${values.gender === 'male' ? '男' : '女'}，
+农历生辰八字：${baziInfo.year} ${baziInfo.month} ${baziInfo.day} ${baziInfo.time}，
+请根据以上信息分析今日运势。`;
+
+    console.log('Dify API 请求参数:', { query });
+
+    const response = await fetch('https://api.dify.ai/v1/chat-messages', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.DIFY_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        inputs: {},
+        query: query,
+        user: values.name,
+        response_mode: "blocking",  // 改为阻塞模式
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Dify API 错误响应:', errorText);
+      throw new Error(`API 请求失败: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Dify API 响应数据:', data);
+
+    // 返回解析后的文本内容
+    return { text: data.answer };
+
+  } catch (error) {
+    console.error('获取运势失败:', error);
+    throw error;
+  }
 }
