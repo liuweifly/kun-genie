@@ -6,9 +6,11 @@ import LuckDiv from './ui/luck-div';
 
 export default function Home() {
 
+  //定义useActionState的hook，用于form提交。流程是form提交后，可以返回错误信息和提醒
   const initialState: State = { message: null, errors: {}, values: {} };
   const [state, formAction] = useActionState(createCustomerInfo, initialState);
 
+  //返回页面。目前是用的cursor生成的。注意：formAction是form提交后，可以返回错误信息和提醒
   return (
     <div className="p-6">
       <h1 className="text-2xl mb-6 text-center">今日运势</h1>
@@ -70,8 +72,7 @@ export default function Home() {
           </div>
         </div>
       </form>
-      <LuckDiv values={state.values ?? {}} /> 
-      
+      <LuckDiv values={state.values ?? {}} />     
     </div>
   );
 }
