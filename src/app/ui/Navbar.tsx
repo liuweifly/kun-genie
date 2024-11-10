@@ -1,14 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import { usePathname, useSearchParams } from 'next/navigation';
-
+  
 export default function Navbar() {
-
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   return (
     <header>
