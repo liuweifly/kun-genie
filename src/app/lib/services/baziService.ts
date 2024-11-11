@@ -212,6 +212,10 @@ export class BaziService {
     const supportiveWuxings = getSupportiveWuxing(userDayMaster);
     const restraintWuxings = getRestraintWuxing(userDayMaster);
 
+    // 只取年月日的天干和藏干
+    const relevantStems = dayWuxing.stems.slice(0, 3); // 只取年月日天干
+    const relevantHiddenStems = dayWuxing.hiddenStems.slice(0, 3); // 只取年月日藏干
+
     // 计算天干运势
     const calculateStemFortune = (stem: { position: string; stem: Stem; wuxing: WuXing }) => {
       const wuxing = stemWuXingMap[stem.stem];
@@ -302,9 +306,9 @@ export class BaziService {
     };
 
     // 计算天干运势
-    dayWuxing.stems.forEach(calculateStemFortune);
+    relevantStems.forEach(calculateStemFortune);
     // 计算藏干运势
-    dayWuxing.hiddenStems.forEach(calculateHiddenStemFortune);
+    relevantHiddenStems.forEach(calculateHiddenStemFortune);
 
     return {
       score: totalScore,
