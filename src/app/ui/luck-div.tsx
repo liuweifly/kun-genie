@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Lunar } from 'lunar-typescript';
-import { getFortune } from "../lib/actions";
+import { getFortune } from "../lib/utils/actions";
 
 interface Values {
     birthDateTime?: string;

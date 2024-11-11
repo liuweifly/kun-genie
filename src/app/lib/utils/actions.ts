@@ -1,7 +1,10 @@
 'use server';
+
 import { z } from 'zod';
-import { sql } from '@vercel/postgres';
 import { Lunar } from 'lunar-typescript';
+import { Gender } from '../types/enums';
+import { UserInput } from '../types/interfaces';
+import { BaziService } from '../services/baziService';
 
 const FormSchema = z.object({
   // id: z.string(),
@@ -28,6 +31,12 @@ export type State = {
     name?: string;
     birthDateTime?: string;
     gender?: string;
+    bazi?: string; // 新增 bazi 属性
+    currentDayBazi?: string;
+    stemBranchwuxing?: string; // 新增 wuxing 属性
+    hiddenStemsWuxing?: string;
+    strength?: string;
+    dayFortune?: string;
   };
 };
 
@@ -37,7 +46,8 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
     birthDateTime: formData.get('birthDateTime'),
     gender: formData.get('gender'),
   };
-  //在当前页面展示form中的信息
+  console.log('用户输入信息', rawFormData);
+
   const validatedFields = CreateCustomerInfo.safeParse(rawFormData);
   if (!validatedFields.success) {
     return {
@@ -50,29 +60,60 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
       },
     };
   }
-  console.log(validatedFields.data);
-  //如果填写数据正确，则返回成功信息和空错误信息以及填写信息
-  return { message: 'Success!', errors: {}, values: validatedFields.data };
 
-  //插入info到数据库中        
-  // const { name, gender, birthDateTime } = validatedFields.data;
-  // const userId = '76d65c26-f784-44a2-ac19-586678f7c2f2';
+  try {
+    const birthDate = new Date(validatedFields.data.birthDateTime);
+    const userInput: UserInput = {
+      gender: validatedFields.data.gender as Gender,
+      birthDate: birthDate
+    };
 
-  // try {
-  //   await sql`
-  //     INSERT INTO customerInfo (name, gender, birthDateTime, userId)
-  //     VALUES (${name}, ${gender}, ${birthDateTime}, ${userId})
-  //   `;
-  //   // console.log('Success!', validatedFields.data);
-  //   return { message: 'Success!', errors: {}, values: validatedFields.data};
-  // } catch (error) {
-  //   console.error('Error:', error);
-  //   return {
-  //     message: 'Database Error: Failed to Create Customer Info.',
-  //     // errors: {},
-  //     // values: {}
-  //   };
-  // }
+    const result = BaziService.calculate(userInput);
+    console.log('八字计算结果：', {
+      bazi: result.bazi,
+      currentDayBazi: result.currentDayBazi,
+      stemBranchwuxing: result.stemBranchwuxing,
+      hiddenStemsWuxing: {
+        stems: JSON.stringify(result.hiddenStemsWuxing.stems),
+        hiddenStems: JSON.stringify(result.hiddenStemsWuxing.hiddenStems)
+      },
+      strength: {
+        score: result.strength.score,
+        status: result.strength.status,
+        details: JSON.stringify(result.strength.details, null, 2)  // 只对 details 使用 JSON.stringify
+      },
+      dayFortune: {
+        score: result.dayFortune.score,
+        details: JSON.stringify(result.dayFortune.details.map(detail => ({
+          position: detail.position,
+          wuxing: detail.wuxing,
+          score: detail.score,
+          type: detail.type
+        })), null, 2)
+      }
+    });
+
+    return { 
+      message: 'Success!', 
+      errors: {}, 
+      values: {
+        ...validatedFields.data,
+        bazi: JSON.stringify(result.bazi),
+        currentDayBazi: JSON.stringify(result.currentDayBazi),
+        stemBranchwuxing: JSON.stringify(result.stemBranchwuxing),
+        hiddenStemsWuxing: JSON.stringify(result.hiddenStemsWuxing),
+        strength: JSON.stringify(result.strength),
+        dayFortune: JSON.stringify(result.dayFortune)
+      } 
+    };
+  } catch (error) {
+    console.error('Error:', error);
+    return {
+      message: '计算八字时出错',
+      errors: {},
+      values: validatedFields.data
+    };
+  }
 }
 
 // 新增获取运势的函数
