@@ -89,7 +89,9 @@ export default function Home() {
               <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 <h3 className="font-semibold mb-2 dark:text-white">基本信息</h3>
                 <p className="dark:text-gray-300">姓名：{state.values.name}</p>
-                <p className="dark:text-gray-300">性别：{state.values.gender === 'male' ? '男' : '女'}</p>
+                <p className="dark:text-gray-300">
+                  性别：{state.values.gender && (state.values.gender === 'male' ? '男' : '女')}
+                </p>
                 <p className="dark:text-gray-300">出生时间：{state.values.birthDateTime}</p>
               </div>
 
