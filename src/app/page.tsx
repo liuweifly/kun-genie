@@ -2,25 +2,19 @@
 
 import { createCustomerInfo, State } from "./lib/utils/actions";
 import { useActionState } from 'react';
-import LuckDiv from './ui/luck-div';
 import React from 'react';
 import LuckDisplay from './ui/LuckDisplay';
+import LoadingState from './ui/LoadingState';
 
 export default function Home() {
-
-  //定义useActionState的hook，用于form提交。流程是form提交后，可以返回错误信息和提醒
   const initialState: State = { message: null, errors: {}, values: {} };
-  const [state, formAction] = useActionState(createCustomerInfo, initialState);
+  const [state, formAction, isPending] = useActionState(createCustomerInfo, initialState);
 
-  //返回页面。目前是用的cursor生成的。注意：formAction是form提交后，可以返回错误信息和提醒
   return (
     <div className="p-6">
-      {state.message && (
-        <div className={`mb-4 p-4 rounded-md ${
-          state.message === 'Success!' 
-            ? 'bg-green-50 text-green-700 border border-green-200' 
-            : 'bg-red-50 text-red-700 border border-red-200'
-        }`}>
+      {/* 在成功时不显示任何信息，而在失败时显示错误信息 */}
+      {state.message && state.message !== 'Success!' && (
+        <div className="mb-4 p-4 rounded-md bg-red-50 text-red-700 border border-red-200">
           {state.message}
         </div>
       )}
@@ -81,14 +75,23 @@ export default function Home() {
           </div>
 
           <div className="mt-6 flex justify-center">
-            <button type="submit" className="w-1/2 bg-black text-white rounded-md p-2 border border-gray-200">
-              ✨ 查收
+            <button 
+              type="submit" 
+              disabled={isPending}
+              className={`w-1/2 bg-black text-white rounded-md p-2 border border-gray-200 transition-opacity ${
+                isPending ? 'opacity-75' : ''
+              }`}
+            >
+              {isPending ? '🔮 正在计算...' : '✨ 查收'}
             </button>
           </div>
           </div>
         </form>
       </div>
+      {/* 加载状态 */}
+      {isPending && <LoadingState />}
       {/* <LuckDisplay /> */}
+      {!isPending && state.message && (
       <div className="mt-6">
         <h2 className="text-lg font-bold dark:text-white">调试信息</h2>
         <div className="mt-4 space-y-4">
@@ -229,7 +232,7 @@ export default function Home() {
           )}
         </div>
       </div>
+      )}
     </div>
   );
 }  
-   {/* <LuckDiv values={state.values ?? {}} />      */}

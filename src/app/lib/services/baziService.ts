@@ -311,7 +311,7 @@ export class BaziService {
     relevantHiddenStems.forEach(calculateHiddenStemFortune);
 
     return {
-      score: totalScore,
+      score: Math.round(totalScore),
       details
     };
   }
