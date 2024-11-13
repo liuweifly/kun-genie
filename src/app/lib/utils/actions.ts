@@ -1,10 +1,11 @@
 'use server';
 
 import { z } from 'zod';
-import { Lunar } from 'lunar-typescript';
 import { Gender } from '../types/enums';
 import { UserInput } from '../types/interfaces';
 import { BaziService } from '../services/baziService';
+import { createCustomer, createFortune } from '../db/actions'
+import { Lunar } from 'lunar-typescript';
 
 const FormSchema = z.object({
   // id: z.string(),
@@ -18,7 +19,6 @@ const FormSchema = z.object({
 });
 
 const CreateCustomerInfo = FormSchema; 
-// const UpdateInfo = FormSchema.omit({ id: true, birthDateTime: true });
 
 export type State = {
   errors?: {
@@ -62,6 +62,15 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
   }
 
   try {
+    // 创建或更新客户信息
+    const customer = await createCustomer({
+      name: validatedFields.data.name,
+      birthDateTime: validatedFields.data.birthDateTime,
+      gender: validatedFields.data.gender as Gender,
+      userId: 'default-user-id', // 后续添加用户系统后需要修改
+    });
+
+    // 八字计算
     const birthDate = new Date(validatedFields.data.birthDateTime);
     const userInput: UserInput = {
       gender: validatedFields.data.gender as Gender,
@@ -69,27 +78,15 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
     };
 
     const result = BaziService.calculate(userInput);
-    console.log('八字计算结果：', {
-      bazi: result.bazi,
-      currentDayBazi: result.currentDayBazi,
-      stemBranchwuxing: result.stemBranchwuxing,
-      hiddenStemsWuxing: {
-        stems: JSON.stringify(result.hiddenStemsWuxing.stems),
-        hiddenStems: JSON.stringify(result.hiddenStemsWuxing.hiddenStems)
-      },
-      strength: {
-        score: result.strength.score,
-        status: result.strength.status,
-        details: JSON.stringify(result.strength.details, null, 2)  // 只对 details 使用 JSON.stringify
-      },
-      dayFortune: {
-        score: result.dayFortune.score,
-        details: JSON.stringify(result.dayFortune.details.map(detail => ({
-          position: detail.position,
-          wuxing: detail.wuxing,
-          score: detail.score,
-          type: detail.type
-        })), null, 2)
+
+    // 保存运势结果
+    await createFortune(customer.id, {
+      overallScore: result.dayFortune.score,
+      details: {
+        bazi: result.bazi,
+        currentDayBazi: result.currentDayBazi,
+        strength: result.strength,
+        dayFortune: result.dayFortune
       }
     });
 
@@ -107,7 +104,7 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
       } 
     };
   } catch (error) {
-    console.error('Error:', error);
+    console.error('处理失败:', error);
     return {
       message: '计算八字时出错',
       errors: {},
@@ -115,7 +112,6 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
     };
   }
 }
-
 // 新增获取运势的函数
 export async function getFortune(values: {
   name?: string;
@@ -179,3 +175,4 @@ export async function getFortune(values: {
     throw error;
   }
 }
+

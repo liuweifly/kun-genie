@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("MYLUCK_PRISMA_URL") // uses connection pooling
+  directUrl = env("MYLUCK_URL_NON_POOLING") // uses a direct connection
+}
+
+model User {
+  id        String     @id @default(uuid())
+  userName  String
+  customers Customer[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Customer {
+  id            String   @id @default(uuid())
+  name          String
+  birthDateTime DateTime
+  gender        String
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  fortunes      Fortune[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Fortune {
+  id            String   @id @default(uuid())
+  customerId    String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  date          DateTime
+  overallScore  Int
+  details       Json
+  createdAt     DateTime @default(now())
+} 
