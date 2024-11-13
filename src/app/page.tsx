@@ -15,6 +15,15 @@ export default function Home() {
   //返回页面。目前是用的cursor生成的。注意：formAction是form提交后，可以返回错误信息和提醒
   return (
     <div className="p-6">
+      {state.message && (
+        <div className={`mb-4 p-4 rounded-md ${
+          state.message === 'Success!' 
+            ? 'bg-green-50 text-green-700 border border-green-200' 
+            : 'bg-red-50 text-red-700 border border-red-200'
+        }`}>
+          {state.message}
+        </div>
+      )}
       <div className="mb-6 col-span-1">
         <h1 className="text-3xl mt-2 mb-2 text-left flex items-center font-bold">
           今日好运，请查收🙌
@@ -222,6 +231,5 @@ export default function Home() {
       </div>
     </div>
   );
-}
-  
+}  
    {/* <LuckDiv values={state.values ?? {}} />      */}

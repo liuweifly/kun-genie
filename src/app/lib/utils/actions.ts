@@ -6,6 +6,8 @@ import { UserInput } from '../types/interfaces';
 import { BaziService } from '../services/baziService';
 import { createCustomer, createFortune } from '../db/actions'
 import { Lunar } from 'lunar-typescript';
+import { BusinessError, DatabaseError } from '../exceptions/AppError';
+import { logError, logInfo } from './logger';
 
 const FormSchema = z.object({
   // id: z.string(),
@@ -41,33 +43,31 @@ export type State = {
 };
 
 export async function createCustomerInfo(prevState: State, formData: FormData): Promise<State> {
+
   const rawFormData = {
     name: formData.get('name'),
     birthDateTime: formData.get('birthDateTime'),
     gender: formData.get('gender'),
+    userId: '76d65c26-f784-44a2-ac19-586678f7c2f2',
   };
-  console.log('用户输入信息', rawFormData);
 
-  const validatedFields = CreateCustomerInfo.safeParse(rawFormData);
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Missing Fields. Failed to Create Customer Info.',
-      values: {
-        name: formData.get('name')?.toString(),
-        birthDateTime: formData.get('birthDateTime')?.toString(),
-        gender: formData.get('gender')?.toString(),
-      },
-    };
-  }
+  try {  
+    logInfo('用户输入信息', rawFormData);
 
-  try {
+    const validatedFields = CreateCustomerInfo.safeParse(rawFormData);
+    if (!validatedFields.success) {
+      throw new BusinessError('输入数据验证失败');
+    }
+
     // 创建或更新客户信息
     const customer = await createCustomer({
       name: validatedFields.data.name,
       birthDateTime: validatedFields.data.birthDateTime,
       gender: validatedFields.data.gender as Gender,
-      userId: 'default-user-id', // 后续添加用户系统后需要修改
+      userId: '76d65c26-f784-44a2-ac19-586678f7c2f2',
+    }).catch(error => {
+      logError('创建用户失败:', error);
+      throw new DatabaseError('创建用户信息失败');
     });
 
     // 八字计算
@@ -88,6 +88,9 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
         strength: result.strength,
         dayFortune: result.dayFortune
       }
+    }).catch(error => {
+      logError('保存运势结果失败:', error);
+      throw new DatabaseError('保存运势结果失败');
     });
 
     return { 
@@ -104,15 +107,40 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
       } 
     };
   } catch (error) {
-    console.error('处理失败:', error);
+    logError('处理用户信息失败:', error);
+
+    // 转换 rawFormData 为符合 State.values 类型的对象
+    const errorValues = {
+      name: rawFormData.name?.toString(),
+      birthDateTime: rawFormData.birthDateTime?.toString(),
+      gender: rawFormData.gender?.toString(),
+    };
+    
+    // 根据错误类型返回不同的错误信息
+    if (error instanceof BusinessError) {
+      return {
+        message: error.message,
+        errors: {},
+        values: errorValues
+      };
+    }
+    
+    if (error instanceof DatabaseError) {
+      return {
+        message: '系统错误，请稍后重试',
+        errors: {},
+        values: errorValues
+      };
+    }
+
     return {
-      message: '计算八字时出错',
+      message: '未知错误，请联系管理员',
       errors: {},
-      values: validatedFields.data
+      values: errorValues
     };
   }
 }
-// 新增获取运势的函数
+
 export async function getFortune(values: {
   name?: string;
   birthDateTime?: string;
@@ -120,7 +148,7 @@ export async function getFortune(values: {
 }) {
   try {
     if (!values.birthDateTime) {
-      throw new Error('出生日期时间不能为空');
+      throw new BusinessError('出生日期时间不能为空');
     }
 
     // 解析日期时间字符串
@@ -154,25 +182,27 @@ export async function getFortune(values: {
         inputs: {},
         query: query,
         user: values.name,
-        response_mode: "blocking",  // 改为阻塞模式
+        response_mode: "blocking",
       })
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Dify API 错误响应:', errorText);
-      throw new Error(`API 请求失败: ${response.status}`);
+      logError('Dify API 错误响应:', errorText);
+      throw new BusinessError('获取运势信息失败');
     }
 
     const data = await response.json();
-    console.log('Dify API 响应数据:', data);
+    logInfo('Dify API 响应数据:', data);
 
-    // 返回解析后的文本内容
     return { text: data.answer };
 
   } catch (error) {
-    console.error('获取运势失败:', error);
-    throw error;
+    logError('获取运势失败:', error);
+    if (error instanceof BusinessError) {
+      throw error;
+    }
+    throw new BusinessError('获取运势信息失败，请稍后重试');
   }
 }
 

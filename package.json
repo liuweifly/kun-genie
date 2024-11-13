@@ -20,6 +20,8 @@
     "lucide-react": "^0.455.0",
     "lunar-typescript": "^1.7.5",
     "next": "15.0.2",
+    "pino": "^9.5.0",
+    "pino-pretty": "^13.0.0",
     "postcss": "^8",
     "react": "19.0.0-rc-02c0e824-20241028",
     "react-dom": "19.0.0-rc-02c0e824-20241028",
