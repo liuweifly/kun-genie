@@ -4,13 +4,16 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("MYLUCK_PRISMA_URL") // uses connection pooling
-  directUrl = env("MYLUCK_URL_NON_POOLING") // uses a direct connection
+  url = env("MYLUCK_PRISMA_URL")
+  directUrl = env("MYLUCK_URL_NON_POOLING")
 }
 
 model User {
   id        String     @id @default(uuid())
-  userName  String
+  openid    String?    @unique
+  phone     String?    @unique
+  email     String?    @unique
+  userName  String?
   customers Customer[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
