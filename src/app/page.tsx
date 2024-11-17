@@ -2,13 +2,50 @@
 
 import { createCustomerInfo, State } from "./lib/utils/actions";
 import { useActionState } from 'react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import LuckDisplay from './ui/LuckDisplay';
 import LoadingState from './ui/LoadingState';
 
 export default function Home() {
   const initialState: State = { message: null, errors: {}, values: {} };
   const [state, formAction, isPending] = useActionState(createCustomerInfo, initialState);
+
+  // 从 localStorage 加载数据
+  useEffect(() => {
+    const savedData = localStorage.getItem('userInputData');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      // 更新表单值
+      const form = document.querySelector('form');
+      if (form) {
+        const nameInput = form.querySelector('#name') as HTMLInputElement;
+        const birthInput = form.querySelector('#birthDateTime') as HTMLInputElement;
+        const genderInputs = form.querySelectorAll('input[name="gender"]') as NodeListOf<HTMLInputElement>;
+        
+        if (nameInput) nameInput.value = parsedData.name || '';
+        if (birthInput) birthInput.value = parsedData.birthDateTime || '';
+        if (genderInputs) {
+          genderInputs.forEach(input => {
+            input.checked = input.value === parsedData.gender;
+          });
+        }
+      }
+    }
+  }, []);
+
+  // 监听表单变化并保存到 localStorage
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const form = e.target.form;
+    if (form) {
+      const formData = new FormData(form);
+      const data = {
+        name: formData.get('name'),
+        birthDateTime: formData.get('birthDateTime'),
+        gender: formData.get('gender'),
+      };
+      localStorage.setItem('userInputData', JSON.stringify(data));
+    }
+  };
 
   return (
     <div className="p-6">
@@ -31,63 +68,67 @@ export default function Home() {
                 type="text"
                 id="name"
                 name="name"
-              className="w-full border rounded-md p-2 text-black"
-              required
-              defaultValue={state.values?.name || ''}
-            />
-          </div>
-
-          <div>
-            <label htmlFor="birthDateTime" className="block mb-2">出生时间</label>
-            <input
-              type="datetime-local"
-              id="birthDateTime"
-              name="birthDateTime"
-              className="w-full border rounded-md p-2 text-black"
-              required
-              defaultValue={state.values?.birthDateTime || ''}
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2">性别</label>
-            <div className="space-x-4">
-              <label className="inline-flex items-center">
-                <input 
-                  type="radio" 
-                  name="gender" 
-                  value="male" 
-                  required
-                  defaultChecked={state.values?.gender === 'male'}
-                />
-                <span className="ml-2">Male</span>
-              </label>
-              <label className="inline-flex items-center">
-                <input 
-                  type="radio" 
-                  name="gender" 
-                  value="female"
-                  defaultChecked={state.values?.gender === 'female'}
-                />
-                <span className="ml-2">Female</span>
-              </label>
+                className="w-full border rounded-md p-2 text-black"
+                required
+                defaultValue={state.values?.name || ''}
+                onChange={handleInputChange}
+              />
             </div>
-          </div>
 
-          <div className="mt-6 flex justify-center">
-            <button 
-              type="submit" 
-              disabled={isPending}
-              className={`w-1/2 bg-black text-white rounded-md p-2 border border-gray-200 transition-opacity ${
-                isPending ? 'opacity-75' : ''
-              }`}
-            >
-              {isPending ? '🔮 正在计算...' : '✨ 查收'}
-            </button>
-          </div>
-          </div>
-        </form>
-      </div>
+            <div>
+              <label htmlFor="birthDateTime" className="block mb-2">出生时间</label>
+              <input
+                type="datetime-local"
+                id="birthDateTime"
+                name="birthDateTime"
+                className="w-full border rounded-md p-2 text-black"
+                required
+                defaultValue={state.values?.birthDateTime || ''}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div>
+              <label className="block mb-2">性别</label>
+              <div className="space-x-4">
+                <label className="inline-flex items-center">
+                  <input 
+                    type="radio" 
+                    name="gender" 
+                    value="male" 
+                    required
+                    defaultChecked={state.values?.gender === 'male'}
+                    onChange={handleInputChange}
+                  />
+                  <span className="ml-2">男</span>
+                </label>
+                <label className="inline-flex items-center">
+                  <input 
+                    type="radio" 
+                    name="gender" 
+                    value="female"
+                    defaultChecked={state.values?.gender === 'female'}
+                    onChange={handleInputChange}
+                  />
+                  <span className="ml-2">女</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <button 
+                type="submit" 
+                disabled={isPending}
+                className={`w-1/2 bg-black text-white rounded-md p-2 border border-gray-200 transition-opacity ${
+                  isPending ? 'opacity-75' : ''
+                }`}
+              >
+                {isPending ? '🔮 正在计算...' : '✨ 查收'}
+              </button>
+            </div>
+            </div>
+          </form>
+        </div>
       {/* 加载状态 */}
       {isPending && <LoadingState />}
       {/* <LuckDisplay /> */}

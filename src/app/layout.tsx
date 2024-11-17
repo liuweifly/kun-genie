@@ -1,4 +1,4 @@
-import Navbar from './ui/Navbar';
+import Footer from './ui/Footer';
 import type { Metadata } from "next";
 import "./ui/globals.css";
 
@@ -13,10 +13,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="zh">
+      <body className="flex flex-col min-h-screen">
         {/* <Navbar /> */}
-        {children}
+        <main className="flex-grow">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
