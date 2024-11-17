@@ -1,6 +1,7 @@
 import Footer from './ui/Footer';
 import type { Metadata } from "next";
 import "./ui/globals.css";
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
   title: "好运盒子 - 好运要及时打开",
@@ -19,6 +20,7 @@ export default function RootLayout({
         <main className="flex-grow">
           {children}
         </main>
+        <Analytics />
         <Footer />
       </body>
     </html>
