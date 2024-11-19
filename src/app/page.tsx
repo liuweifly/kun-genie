@@ -152,68 +152,8 @@ export default function Home() {
               {/* 十神分析 */}
               {state.values.tenGodData && (
                 <div className="mt-8">
-                  <h2 className="text-xl font-bold mb-4">八字十神分析</h2>
+                  <h3 className="text-xl font-bold mb-4">八字十神分析</h3>
                   <TenGodDisplay tenGodData={JSON.parse(state.values.tenGodData)} />
-                </div>
-              )}
-
-              {/* 八字信息 */}
-              {state.values.bazi && (
-                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <h3 className="font-semibold mb-2 dark:text-white">八字</h3>
-                  {(() => {
-                    const bazi = JSON.parse(state.values.bazi);
-                    return (
-                      <div className="grid grid-cols-4 gap-4">
-                        <div>
-                          <p className="text-gray-600 dark:text-gray-400">年柱</p>
-                          <p className="dark:text-gray-300">{bazi.year.stem}{bazi.year.branch}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600 dark:text-gray-400">月柱</p>
-                          <p className="dark:text-gray-300">{bazi.month.stem}{bazi.month.branch}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600 dark:text-gray-400">日柱</p>
-                          <p className="dark:text-gray-300">{bazi.day.stem}{bazi.day.branch}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600 dark:text-gray-400">时柱</p>
-                          <p className="dark:text-gray-300">{bazi.hour.stem}{bazi.hour.branch}</p>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </div>
-              )}
-
-              {/* 当天八字 */}
-              {state.values.currentDayBazi && (
-                <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <h3 className="font-semibold mb-2 dark:text-white">今日八字</h3>
-                  {(() => {
-                    const currentDayBazi = JSON.parse(state.values.currentDayBazi);
-                    return (
-                      <div className="grid grid-cols-4 gap-4">
-                        <div>
-                          <p className="text-gray-600 dark:text-gray-400">年柱</p>
-                          <p className="dark:text-gray-300">{currentDayBazi.year.stem}{currentDayBazi.year.branch}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600 dark:text-gray-400">月柱</p>
-                          <p className="dark:text-gray-300">{currentDayBazi.month.stem}{currentDayBazi.month.branch}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600 dark:text-gray-400">日柱</p>
-                          <p className="dark:text-gray-300">{currentDayBazi.day.stem}{currentDayBazi.day.branch}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-600 dark:text-gray-400">时柱</p>
-                          <p className="dark:text-gray-300">{currentDayBazi.hour.stem}{currentDayBazi.hour.branch}</p>
-                        </div>
-                      </div>
-                    );
-                  })()}
                 </div>
               )}
 
