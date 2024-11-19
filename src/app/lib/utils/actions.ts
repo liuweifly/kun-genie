@@ -39,6 +39,7 @@ export type State = {
     hiddenStemsWuxing?: string;
     strength?: string;
     dayFortune?: string;
+    tenGodData?: string;
   };
 };
 
@@ -103,7 +104,8 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
         stemBranchwuxing: JSON.stringify(result.stemBranchwuxing),
         hiddenStemsWuxing: JSON.stringify(result.hiddenStemsWuxing),
         strength: JSON.stringify(result.strength),
-        dayFortune: JSON.stringify(result.dayFortune)
+        dayFortune: JSON.stringify(result.dayFortune),
+        tenGodData: JSON.stringify(result.tenGods)
       } 
     };
   } catch (error) {
@@ -141,6 +143,7 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
   }
 }
 
+//获取dify运势，短期废弃
 export async function getFortune(values: {
   name?: string;
   birthDateTime?: string;

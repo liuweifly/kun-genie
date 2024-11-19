@@ -5,6 +5,7 @@ import { useActionState } from 'react';
 import React, { useEffect } from 'react';
 import LuckDisplay from './ui/LuckDisplay';
 import LoadingState from './ui/LoadingState';
+import TenGodDisplay from './ui/TenGodDisplay';
 
 export default function Home() {
   const initialState: State = { message: null, errors: {}, values: {} };
@@ -148,6 +149,14 @@ export default function Home() {
                 <p className="dark:text-gray-300">出生时间：{state.values.birthDateTime}</p>
               </div>
 
+              {/* 十神分析 */}
+              {state.values.tenGodData && (
+                <div className="mt-8">
+                  <h2 className="text-xl font-bold mb-4">八字十神分析</h2>
+                  <TenGodDisplay tenGodData={JSON.parse(state.values.tenGodData)} />
+                </div>
+              )}
+
               {/* 八字信息 */}
               {state.values.bazi && (
                 <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -268,7 +277,7 @@ export default function Home() {
                     );
                   })()}
                 </div>
-              )}
+              )}       
             </>
           )}
         </div>
