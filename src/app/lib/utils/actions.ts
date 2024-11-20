@@ -5,10 +5,15 @@ import { Gender } from '../types/enums';
 import { UserInput } from '../types/interfaces';
 import { BaziService } from '../services/baziService';
 import { DaYunService } from '../services/dayunService';
+import { TenGodService } from '../services/tenGodService';
+import { StrengthService } from '../services/strengthService';
+import { FortuneService } from '../services/fortuneService';
+import { stemWuXingMap } from '../constants/mapping';
 import { createCustomer, createFortune } from '../db/actions'
 import { Lunar } from 'lunar-typescript';
 import { BusinessError, DatabaseError } from '../exceptions/AppError';
 import { logError, logInfo } from './logger';
+
 
 const FormSchema = z.object({
   // id: z.string(),
@@ -73,8 +78,6 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
       throw new DatabaseError('创建用户信息失败');
     });
 
-    
-
     //将浏览器时区的时间转换为UTC时间，避免时区问题。
     //我国曾在从1986年至1991年实行过夏时令，所以在这段时间内出生的国人需要减去1小时，才是真实出生时间。
     const birthDate = new Date(validatedFields.data.birthDateTime);
@@ -95,20 +98,32 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
       result.bazi.month.branch
     );
     
+    // 十神计算
+    const tenGodResult = TenGodService.calculate(result.bazi, result.currentDayBazi);
 
+    // 日主强弱计算
+    const strength = StrengthService.calculate(result.bazi);
+
+    // 计算当日运势
+    const dayFortune = FortuneService.calculate(
+        result.currentDayBazi,
+        stemWuXingMap[result.bazi.day.stem],
+        strength.status
+    );
+    
     // 保存运势结果
-    await createFortune(customer.id, {
-      overallScore: result.dayFortune.score,
-      details: {
-        bazi: result.bazi,
-        currentDayBazi: result.currentDayBazi,
-        strength: result.strength,
-        dayFortune: result.dayFortune
-      }
-    }).catch(error => {
-      logError('保存运势结果失败:', error);
-      throw new DatabaseError('保存运势结果失败');
-    });
+    // await createFortune(customer.id, {
+    //   overallScore: result.dayFortune.score,
+    //   details: {
+    //     bazi: result.bazi,
+    //     currentDayBazi: result.currentDayBazi,
+    //     strength: result.strength,
+    //     dayFortune: result.dayFortune
+    //   }
+    // }).catch(error => {
+    //   logError('保存运势结果失败:', error);
+    //   throw new DatabaseError('保存运势结果失败');
+    // });
 
     return { 
       message: 'Success!', 
@@ -119,10 +134,10 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
         currentDayBazi: JSON.stringify(result.currentDayBazi),
         stemBranchwuxing: JSON.stringify(result.stemBranchwuxing),
         hiddenStemsWuxing: JSON.stringify(result.hiddenStemsWuxing),
-        strength: JSON.stringify(result.strength),
-        dayFortune: JSON.stringify(result.dayFortune),
+        strength: JSON.stringify(strength),
+        dayFortune: JSON.stringify(dayFortune),
         daYunData: JSON.stringify(dayunResult),
-        tenGodData: JSON.stringify(result.tenGods)
+        tenGodData: JSON.stringify(tenGodResult)
       } 
     };
   } catch (error) {

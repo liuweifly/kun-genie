@@ -158,6 +158,14 @@ export default function Home() {
                 </div>
               )}
 
+              {/* 大运分析 */}
+              {state.values.daYunData && (
+                <div className="mt-8">
+                  <h3 className="text-xl font-bold mb-4">大运分析</h3>
+                  <DaYunDisplay daYun={JSON.parse(state.values.daYunData)} />
+                </div>
+              )}
+
               {/* 身强弱分析 */}
               {state.values.strength && (
                 <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -217,14 +225,6 @@ export default function Home() {
                       </div>
                     );
                   })()}
-                </div>
-              )}
-
-              {/* 大运分析 */}
-              {state.values.daYunData && (
-                <div className="mt-8">
-                  <h3 className="text-xl font-bold mb-4">大运分析</h3>
-                  <DaYunDisplay daYun={JSON.parse(state.values.daYunData)} />
                 </div>
               )}
             </>

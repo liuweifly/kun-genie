@@ -9,10 +9,10 @@ export const DaYunDisplay = ({ daYun }: DaYunDisplayProps) => {
     <div className="w-full overflow-x-auto">
       <table className="min-w-full table-auto border-collapse">
         <thead>
-          <tr className="bg-gray-100">
+          <tr>
             <th className="border px-4 py-2">岁数</th>
             {daYun.daYuns.map((d, index) => (
-              <th key={index} className="border px-4 py-2">{d.age}岁</th>
+              <th key={index} className="border px-4 py-2 text-center">{d.age}岁</th>
             ))}
           </tr>
         </thead>
@@ -20,7 +20,7 @@ export const DaYunDisplay = ({ daYun }: DaYunDisplayProps) => {
           <tr>
             <td className="border px-4 py-2 font-bold">年份</td>
             {daYun.daYuns.map((d, index) => (
-              <td key={index} className="border px-4 py-2">{d.year}</td>
+              <td key={index} className="border px-4 py-2 text-center">{d.year}</td>
             ))}
           </tr>
           <tr>
@@ -28,7 +28,7 @@ export const DaYunDisplay = ({ daYun }: DaYunDisplayProps) => {
             {daYun.daYuns.map((d, index) => (
               <td 
                 key={index} 
-                className="border px-4 py-2"
+                className="border px-4 py-2 text-center"
               >
                 {d.stem}
               </td>
@@ -39,7 +39,7 @@ export const DaYunDisplay = ({ daYun }: DaYunDisplayProps) => {
             {daYun.daYuns.map((d, index) => (
               <td 
                 key={index} 
-                className="border px-4 py-2"
+                className="border px-4 py-2 text-center"
               >
                 {d.branch}
               </td>
