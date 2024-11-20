@@ -38,7 +38,7 @@ export const branchHiddenStemMap: Record<Branch, HiddenStem> = {
     [Branch.CHEN]: { main: Stem.WU, secondary: Stem.YI, tertiary: Stem.GUI },
     [Branch.SI]: { main: Stem.BING, secondary: Stem.WU, tertiary: Stem.GENG },
     [Branch.WU]: { main: Stem.DING, secondary: Stem.JI },
-    [Branch.WEI]: { main: Stem.JI, secondary: Stem.DING, tertiary: Stem.YI },
+    [Branch.WEI]: { main: Stem.JI, secondary: Stem.YI, tertiary: Stem.DING },
     [Branch.SHEN]: { main: Stem.GENG, secondary: Stem.REN, tertiary: Stem.WU },
     [Branch.YOU]: { main: Stem.XIN },
     [Branch.XU]: { main: Stem.WU, secondary: Stem.XIN, tertiary: Stem.DING },

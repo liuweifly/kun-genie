@@ -41,7 +41,7 @@ export default function TenGodDisplay({ tenGodData }: TenGodDisplayProps) {
           <tr>
             <td className="border px-4 py-2 font-bold">十神</td>
             {tenGodData.stems.map(({ tenGod, position }) => (
-              <td key={position} className="border px-4 py-2">{tenGod}</td>
+              <td key={position} className="border px-4 py-2 text-center">{tenGod}</td>
             ))}
           </tr>
           <tr>
@@ -49,7 +49,7 @@ export default function TenGodDisplay({ tenGodData }: TenGodDisplayProps) {
             {tenGodData.stems.map(({ stem, color, position }) => (
               <td 
                 key={position} 
-                className="border px-4 py-2 text-2xl font-bold"
+                className="border px-4 py-2 text-2xl font-bold text-center"
                 style={{ color }}
               >
                 {stem}
@@ -59,7 +59,7 @@ export default function TenGodDisplay({ tenGodData }: TenGodDisplayProps) {
           <tr>
             <td className="border px-4 py-2 font-bold">地支</td>
             {tenGodData.hiddenStems.map(({ branchs, position }) => (
-              <td key={position} className="border px-4 py-2 text-2xl font-bold">
+              <td key={position} className="border px-4 py-2 text-2xl font-bold text-center">
                   <span 
                     style={{ color: branchs.color }}
                     className="block"
@@ -72,7 +72,7 @@ export default function TenGodDisplay({ tenGodData }: TenGodDisplayProps) {
           <tr>
             <td className="border px-4 py-2 font-bold">藏干十神</td>
             {tenGodData.hiddenStems.map(({ stems, position }) => (
-              <td key={position} className="border px-4 py-2">
+              <td key={position} className="border px-4 py-2 text-center align-top">
                 {stems.map(({ stem, tenGod, color }, index) => (
                   <span 
                     key={index}

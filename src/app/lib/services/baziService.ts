@@ -12,6 +12,8 @@ export class BaziService {
   static calculateBazi(birthDate: Date): BaZi {
     const lunar = Lunar.fromDate(birthDate);
     
+    // console.log('calculateBazi birthDate', birthDate);
+
     return {
       year: {
         stem: lunar.getYearGan() as Stem,

@@ -50,3 +50,18 @@ export interface FortuneInfo {
   overallScore: number;
   details: any; // 可以根据实际数据结构定义更具体的类型
 }
+
+// 大运相关接口
+export interface DaYun {
+  age: number;          // 起运年龄
+  year: number;         // 起运年份
+  stem: string;         // 天干
+  branch: string;       // 地支
+}
+
+export interface DaYunResult {
+  startAge: number;     // 起运年龄
+  startYear: number;    // 起运年份
+  sequence: 'forward' | 'backward';     // 顺/逆
+  daYuns: DaYun[];     // 8个大运信息
+}

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { Gender } from '../types/enums';
 import { UserInput } from '../types/interfaces';
 import { BaziService } from '../services/baziService';
+import { DaYunService } from '../services/dayunService';
 import { createCustomer, createFortune } from '../db/actions'
 import { Lunar } from 'lunar-typescript';
 import { BusinessError, DatabaseError } from '../exceptions/AppError';
@@ -39,6 +40,7 @@ export type State = {
     hiddenStemsWuxing?: string;
     strength?: string;
     dayFortune?: string;
+    daYunData?: string;
     tenGodData?: string;
   };
 };
@@ -71,14 +73,28 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
       throw new DatabaseError('创建用户信息失败');
     });
 
-    // 八字计算
+    
+
+    //将浏览器时区的时间转换为UTC时间，避免时区问题。
+    //我国曾在从1986年至1991年实行过夏时令，所以在这段时间内出生的国人需要减去1小时，才是真实出生时间。
     const birthDate = new Date(validatedFields.data.birthDateTime);
     const userInput: UserInput = {
       gender: validatedFields.data.gender as Gender,
       birthDate: birthDate
     };
 
+    // 八字计算
     const result = BaziService.calculate(userInput);
+
+    // 大运计算
+    const dayunResult = DaYunService.calculateDaYun(
+      birthDate,
+      validatedFields.data.gender as Gender,
+      result.bazi.year.branch,
+      result.bazi.month.stem,
+      result.bazi.month.branch
+    );
+    
 
     // 保存运势结果
     await createFortune(customer.id, {
@@ -105,6 +121,7 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
         hiddenStemsWuxing: JSON.stringify(result.hiddenStemsWuxing),
         strength: JSON.stringify(result.strength),
         dayFortune: JSON.stringify(result.dayFortune),
+        daYunData: JSON.stringify(dayunResult),
         tenGodData: JSON.stringify(result.tenGods)
       } 
     };

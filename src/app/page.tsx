@@ -6,6 +6,7 @@ import React, { useEffect } from 'react';
 import LuckDisplay from './ui/LuckDisplay';
 import LoadingState from './ui/LoadingState';
 import TenGodDisplay from './ui/TenGodDisplay';
+import { DaYunDisplay } from './ui/DaYunDisplay';
 
 export default function Home() {
   const initialState: State = { message: null, errors: {}, values: {} };
@@ -217,7 +218,15 @@ export default function Home() {
                     );
                   })()}
                 </div>
-              )}       
+              )}
+
+              {/* 大运分析 */}
+              {state.values.daYunData && (
+                <div className="mt-8">
+                  <h3 className="text-xl font-bold mb-4">大运分析</h3>
+                  <DaYunDisplay daYun={JSON.parse(state.values.daYunData)} />
+                </div>
+              )}
             </>
           )}
         </div>
