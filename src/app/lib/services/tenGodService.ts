@@ -1,12 +1,12 @@
 import { Stem, Branch, TenGod } from '../types/enums';
-import { BaZi } from '../types/interfaces';
+import { BaZi, DaYun } from '../types/interfaces';
 import { tenGodMap } from '../constants/tenGodMapping';
 import { branchHiddenStemMap } from '../constants/mapping';
 import { getStemWuXingColor, getBranchWuXingColor } from '../utils/colors';
 
 export class TenGodService {
   // 计算十神
-  static calculate(bazi: BaZi, currentDayBazi: BaZi): {
+  static calculate(bazi: BaZi, currentDayBazi: BaZi, currentDaYun: { stem: Stem; branch: Branch; startYear: number }): {
     stems: {
       position: string;
       stem: Stem;
@@ -30,6 +30,7 @@ export class TenGodService {
     
     // 计算天干十神
     const stems = [
+      { position: '大运', stem: currentDaYun.stem },
       { position: '流年', stem: currentDayBazi.year.stem },
       { position: '流月', stem: currentDayBazi.month.stem },
       { position: '流日', stem: currentDayBazi.day.stem },
@@ -46,6 +47,7 @@ export class TenGodService {
 
     // 计算藏干十神
     const hiddenStems = [
+      { position: '大运', branch: currentDaYun.branch },
       { position: '流年', branch: currentDayBazi.year.branch },
       { position: '流月', branch: currentDayBazi.month.branch },
       { position: '流日', branch: currentDayBazi.day.branch },

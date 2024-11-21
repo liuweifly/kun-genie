@@ -55,8 +55,8 @@ export interface FortuneInfo {
 export interface DaYun {
   age: number;          // 起运年龄
   year: number;         // 起运年份
-  stem: string;         // 天干
-  branch: string;       // 地支
+  stem: Stem;         // 天干
+  branch: Branch;       // 地支
 }
 
 export interface DaYunResult {

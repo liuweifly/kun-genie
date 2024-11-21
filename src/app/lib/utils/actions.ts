@@ -97,9 +97,18 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
       result.bazi.month.stem,
       result.bazi.month.branch
     );
-    
+
+    // 当前大运计算
+    const currentDaYun = DaYunService.getCurrentDaYun(
+      birthDate,
+      validatedFields.data.gender as Gender,
+      result.bazi.year.branch,
+      result.bazi.month.stem,
+      result.bazi.month.branch
+    );
+
     // 十神计算
-    const tenGodResult = TenGodService.calculate(result.bazi, result.currentDayBazi);
+    const tenGodResult = TenGodService.calculate(result.bazi, result.currentDayBazi, currentDaYun);
 
     // 日主强弱计算
     const strength = StrengthService.calculate(result.bazi);

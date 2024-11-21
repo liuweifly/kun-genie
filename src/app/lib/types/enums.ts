@@ -65,67 +65,67 @@ export const YIN_MALE_YANG_FEMALE_BRANCHES = [
 ];
 
 // 六十甲子表
-export const SIXTY_JIAZI = [
-  { stem: '甲', branch: '子' },
-  { stem: '乙', branch: '丑' },
-  { stem: '丙', branch: '寅' },
-  { stem: '丁', branch: '卯' },
-  { stem: '戊', branch: '辰' },
-  { stem: '己', branch: '巳' },
-  { stem: '庚', branch: '午' },
-  { stem: '辛', branch: '未' },
-  { stem: '壬', branch: '申' },
-  { stem: '癸', branch: '酉' },
-  { stem: '甲', branch: '戌' },
-  { stem: '乙', branch: '亥' },
-  { stem: '丙', branch: '子' },
-  { stem: '丁', branch: '丑' },
-  { stem: '戊', branch: '寅' },
-  { stem: '己', branch: '卯' },
-  { stem: '庚', branch: '辰' },
-  { stem: '辛', branch: '巳' },
-  { stem: '壬', branch: '午' },
-  { stem: '癸', branch: '未' },
-  { stem: '甲', branch: '申' },
-  { stem: '乙', branch: '酉' }, 
-  { stem: '丙', branch: '戌' },
-  { stem: '丁', branch: '亥' },
-  { stem: '戊', branch: '子' },
-  { stem: '己', branch: '丑' },
-  { stem: '庚', branch: '寅' },
-  { stem: '辛', branch: '卯' },
-  { stem: '壬', branch: '辰' },
-  { stem: '癸', branch: '巳' },
-  { stem: '甲', branch: '午' },
-  { stem: '乙', branch: '未' },
-  { stem: '丙', branch: '申' },
-  { stem: '丁', branch: '酉' },
-  { stem: '戊', branch: '戌' },
-  { stem: '己', branch: '亥' },
-  { stem: '庚', branch: '子' },
-  { stem: '辛', branch: '丑' },
-  { stem: '壬', branch: '寅' },
-  { stem: '癸', branch: '卯' },
-  { stem: '甲', branch: '辰' },
-  { stem: '乙', branch: '巳' },
-  { stem: '丙', branch: '午' },
-  { stem: '丁', branch: '未' },
-  { stem: '戊', branch: '申' },
-  { stem: '己', branch: '酉' },
-  { stem: '庚', branch: '戌' },
-  { stem: '辛', branch: '亥' },
-  { stem: '壬', branch: '子' },
-  { stem: '癸', branch: '丑' },
-  { stem: '甲', branch: '寅' },
-  { stem: '乙', branch: '卯' },
-  { stem: '丙', branch: '辰' },
-  { stem: '丁', branch: '巳' },
-  { stem: '戊', branch: '午' },
-  { stem: '己', branch: '未' },
-  { stem: '庚', branch: '申' },
-  { stem: '辛', branch: '酉' },
-  { stem: '壬', branch: '戌' },
-  { stem: '癸', branch: '亥' } 
+export const SIXTY_JIAZI: Array<{ stem: Stem; branch: Branch }> = [
+  { stem: Stem.JIA, branch: Branch.ZI },    // 甲子
+  { stem: Stem.YI, branch: Branch.CHOU },   // 乙丑
+  { stem: Stem.BING, branch: Branch.YIN },  // 丙寅
+  { stem: Stem.DING, branch: Branch.MAO },  // 丁卯
+  { stem: Stem.WU, branch: Branch.CHEN },   // 戊辰
+  { stem: Stem.JI, branch: Branch.SI },     // 己巳
+  { stem: Stem.GENG, branch: Branch.WU },   // 庚午
+  { stem: Stem.XIN, branch: Branch.WEI },   // 辛未
+  { stem: Stem.REN, branch: Branch.SHEN },  // 壬申
+  { stem: Stem.GUI, branch: Branch.YOU },   // 癸酉
+  { stem: Stem.JIA, branch: Branch.XU },    // 甲戌
+  { stem: Stem.YI, branch: Branch.HAI },    // 乙亥
+  { stem: Stem.BING, branch: Branch.ZI },   // 丙子
+  { stem: Stem.DING, branch: Branch.CHOU }, // 丁丑
+  { stem: Stem.WU, branch: Branch.YIN },    // 戊寅
+  { stem: Stem.JI, branch: Branch.MAO },    // 己卯
+  { stem: Stem.GENG, branch: Branch.CHEN }, // 庚辰
+  { stem: Stem.XIN, branch: Branch.SI },    // 辛巳
+  { stem: Stem.REN, branch: Branch.WU },    // 壬午
+  { stem: Stem.GUI, branch: Branch.WEI },   // 癸未
+  { stem: Stem.JIA, branch: Branch.SHEN },  // 甲申
+  { stem: Stem.YI, branch: Branch.YOU },    // 乙酉
+  { stem: Stem.BING, branch: Branch.XU },   // 丙戌
+  { stem: Stem.DING, branch: Branch.HAI },  // 丁亥
+  { stem: Stem.WU, branch: Branch.ZI },     // 戊子
+  { stem: Stem.JI, branch: Branch.CHOU },   // 己丑
+  { stem: Stem.GENG, branch: Branch.YIN },  // 庚寅
+  { stem: Stem.XIN, branch: Branch.MAO },   // 辛卯
+  { stem: Stem.REN, branch: Branch.CHEN },  // 壬辰
+  { stem: Stem.GUI, branch: Branch.SI },    // 癸巳
+  { stem: Stem.JIA, branch: Branch.WU },    // 甲午
+  { stem: Stem.YI, branch: Branch.WEI },    // 乙未
+  { stem: Stem.BING, branch: Branch.SHEN }, // 丙申
+  { stem: Stem.DING, branch: Branch.YOU },  // 丁酉
+  { stem: Stem.WU, branch: Branch.XU },     // 戊戌
+  { stem: Stem.JI, branch: Branch.HAI },    // 己亥
+  { stem: Stem.GENG, branch: Branch.ZI },   // 庚子
+  { stem: Stem.XIN, branch: Branch.CHOU },  // 辛丑
+  { stem: Stem.REN, branch: Branch.YIN },   // 壬寅
+  { stem: Stem.GUI, branch: Branch.MAO },   // 癸卯
+  { stem: Stem.JIA, branch: Branch.CHEN },  // 甲辰
+  { stem: Stem.YI, branch: Branch.SI },     // 乙巳
+  { stem: Stem.BING, branch: Branch.WU },   // 丙午
+  { stem: Stem.DING, branch: Branch.WEI },  // 丁未
+  { stem: Stem.WU, branch: Branch.SHEN },   // 戊申
+  { stem: Stem.JI, branch: Branch.YOU },    // 己酉
+  { stem: Stem.GENG, branch: Branch.XU },   // 庚戌
+  { stem: Stem.XIN, branch: Branch.HAI },   // 辛亥
+  { stem: Stem.REN, branch: Branch.ZI },    // 壬子
+  { stem: Stem.GUI, branch: Branch.CHOU },  // 癸丑
+  { stem: Stem.JIA, branch: Branch.YIN },   // 甲寅
+  { stem: Stem.YI, branch: Branch.MAO },    // 乙卯
+  { stem: Stem.BING, branch: Branch.CHEN }, // 丙辰
+  { stem: Stem.DING, branch: Branch.SI },   // 丁巳
+  { stem: Stem.WU, branch: Branch.WU },     // 戊午
+  { stem: Stem.JI, branch: Branch.WEI },    // 己未
+  { stem: Stem.GENG, branch: Branch.SHEN }, // 庚申
+  { stem: Stem.XIN, branch: Branch.YOU },   // 辛酉
+  { stem: Stem.REN, branch: Branch.XU },    // 壬戌
+  { stem: Stem.GUI, branch: Branch.HAI }    // 癸亥
 ];
 
 // 添加十神枚举

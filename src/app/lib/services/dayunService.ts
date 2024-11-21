@@ -43,7 +43,7 @@ export class DaYunService {
   }
     
   // 获取下一个干支
-  private static getNextGanZhi(currentIndex: number, isForward: boolean): { stem: string; branch: string } {
+  private static getNextGanZhi(currentIndex: number, isForward: boolean): { stem: Stem; branch: Branch } {
     const length = SIXTY_JIAZI.length; // 60
     if (isForward) {
         // 顺序，向后推1位
@@ -56,6 +56,41 @@ export class DaYunService {
     }
   }
 
+  // 获取当前大运
+  public static getCurrentDaYun(
+    birthDate: Date,
+    gender: Gender,
+    yearBranch: Branch,
+    monthStem: Stem,
+    monthBranch: Branch
+  ): { stem: Stem; branch: Branch; startYear: number } {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+
+    // 计算完整大运信息
+    const daYunResult = this.calculateDaYun(birthDate, gender, yearBranch, monthStem, monthBranch);
+
+    // 找到当前所在大运
+    const currentDaYun = daYunResult.daYuns.find(daYun => {
+      const daYunEndYear = daYun.year + 10;
+      return currentYear >= daYun.year && currentYear < daYunEndYear;
+    });
+
+    // 如果当前大运为空，则返回第一个大运
+    if (!currentDaYun) {
+      return {
+        stem: daYunResult.daYuns[0].stem,
+        branch: daYunResult.daYuns[0].branch,
+        startYear: daYunResult.daYuns[0].year
+      }
+    }
+
+    return {
+      stem: currentDaYun.stem,
+      branch: currentDaYun.branch,
+      startYear: currentDaYun.year
+    };
+  }
   // 计算大运
   public static calculateDaYun(
     birthDate: Date,
