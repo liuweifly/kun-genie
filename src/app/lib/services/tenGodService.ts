@@ -30,10 +30,10 @@ export class TenGodService {
     
     // 计算天干十神
     const stems = [
-      { position: '大运', stem: currentDaYun.stem },
-      { position: '流年', stem: currentDayBazi.year.stem },
-      { position: '流月', stem: currentDayBazi.month.stem },
       { position: '流日', stem: currentDayBazi.day.stem },
+      { position: '流月', stem: currentDayBazi.month.stem },
+      { position: '流年', stem: currentDayBazi.year.stem },
+      { position: '大运', stem: currentDaYun.stem },
       { position: '年柱', stem: bazi.year.stem },
       { position: '月柱', stem: bazi.month.stem },
       { position: '日柱', stem: bazi.day.stem },
@@ -47,10 +47,10 @@ export class TenGodService {
 
     // 计算藏干十神
     const hiddenStems = [
-      { position: '大运', branch: currentDaYun.branch },
-      { position: '流年', branch: currentDayBazi.year.branch },
-      { position: '流月', branch: currentDayBazi.month.branch },
       { position: '流日', branch: currentDayBazi.day.branch },
+      { position: '流月', branch: currentDayBazi.month.branch },
+      { position: '流年', branch: currentDayBazi.year.branch },
+      { position: '大运', branch: currentDaYun.branch },
       { position: '年柱', branch: bazi.year.branch },
       { position: '月柱', branch: bazi.month.branch },
       { position: '日柱', branch: bazi.day.branch },

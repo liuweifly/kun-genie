@@ -42,6 +42,27 @@ export enum WuXing {
   EARTH = '土'
 }
 
+export enum Direction {
+  EAST = 'EAST',    // 东
+  SOUTH = 'SOUTH',  // 南
+  WEST = 'WEST',    // 西
+  NORTH = 'NORTH'   // 北
+}
+
+// 定义天干地支关系类型
+export enum RelationType {
+  SHENG = '生',
+  KE = '克', 
+  XIANGHE = '相合',
+  SANHE = '三合',
+  SANHUI = '三会',
+  XIANGXING = '相刑',
+  SANXING = '三刑',
+  ZIXING = '自刑',
+  XIANGCHONG = '相冲',
+  XIANGHAI = '相害'
+}
+
 
 //大运计算
 // 阳男阴女的地支顺序

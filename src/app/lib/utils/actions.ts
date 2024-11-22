@@ -8,6 +8,7 @@ import { DaYunService } from '../services/dayunService';
 import { TenGodService } from '../services/tenGodService';
 import { StrengthService } from '../services/strengthService';
 import { FortuneService } from '../services/fortuneService';
+import { GanZhiRelationService } from '../services/ganZhiRelationService';
 import { stemWuXingMap } from '../constants/mapping';
 import { createCustomer, createFortune } from '../db/actions'
 import { Lunar } from 'lunar-typescript';
@@ -47,6 +48,7 @@ export type State = {
     dayFortune?: string;
     daYunData?: string;
     tenGodData?: string;
+    baziRelations?: string;
   };
 };
 
@@ -134,6 +136,41 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
     //   throw new DatabaseError('保存运势结果失败');
     // });
 
+    const baziRelations = {
+      stemRelations: GanZhiRelationService.calculateBaziStemRelations(
+        result.bazi.year.stem,
+        result.bazi.month.stem,
+        result.bazi.day.stem,
+        result.bazi.hour.stem
+      ),
+      branchRelations: GanZhiRelationService.calculateBaziBranchRelations(
+        result.bazi.year.branch,
+        result.bazi.month.branch,
+        result.bazi.day.branch,
+        result.bazi.hour.branch
+      )
+    };
+    console.dir({
+      stemRelations: baziRelations.stemRelations.map(r => ({
+        relationType: r.relationType,
+        isDirectional: r.isDirectional,
+        wuxing: r.wuxing,
+        members: r.members.map(m => ({
+          position: m.position,
+          value: m.value
+        }))
+      })),
+      branchRelations: baziRelations.branchRelations.map(r => ({
+        relationType: r.relationType,
+        isDirectional: r.isDirectional,
+        wuxing: r.wuxing,
+        members: r.members.map(m => ({
+          position: m.position,
+          value: m.value
+        }))
+      }))
+    }, { depth: null });
+
     return { 
       message: 'Success!', 
       errors: {}, 
@@ -146,7 +183,8 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
         strength: JSON.stringify(strength),
         dayFortune: JSON.stringify(dayFortune),
         daYunData: JSON.stringify(dayunResult),
-        tenGodData: JSON.stringify(tenGodResult)
+        tenGodData: JSON.stringify(tenGodResult),
+        baziRelations: JSON.stringify(baziRelations)
       } 
     };
   } catch (error) {

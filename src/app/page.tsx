@@ -153,7 +153,7 @@ export default function Home() {
               {/* 十神分析 */}
               {state.values.tenGodData && (
                 <div className="mt-8">
-                  <h3 className="text-xl font-bold mb-4">八字十神分析</h3>
+                  <h3 className="text-xl font-bold mb-4">八字排盘分析</h3>
                   <TenGodDisplay tenGodData={JSON.parse(state.values.tenGodData)} />
                 </div>
               )}

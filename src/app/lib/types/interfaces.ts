@@ -1,9 +1,11 @@
-import { Gender, Stem, Branch } from './enums';
+
+import { Gender, Stem, Branch, WuXing, TenGod } from './enums';
+import { Position, SixRelation, BodyPart, AgeRange } from './xiangyiEnums';
 
 export interface UserInput {
   gender: Gender;
   birthDate: Date;
-}
+} 
 
 export interface BaZi {
   year: { stem: Stem; branch: Branch };
