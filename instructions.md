@@ -190,8 +190,11 @@
       - 测试，在action.ts中调用并通过console.log输出结果。
 
 
-3. 设计完成GanZhiItem表，
-  - 结合天干地支象义表，获取对应的十神数据
+3. 完成八字、大运、流年关系的展示
+  - 优先理解 @gzRelation.ts 中GanZhiItem和GanZhiItemRelation两个接口
+  - 要从page传参中获取十神信息，结合{ 干/支，位置 } ，知道十神是什么，查 @xiangyiEnums.ts 获取对应的象义。填充GanZhiItem
+  - 获取完数据后，用GanZhiItemRelation按照截图给你的样式展示。
+  - 注意：一些已经有了的枚举值不用重复做 @enums.ts  @xiangyiEnums.ts 
   - 展示样式如下图
 ![alt text](public/md/天干生克合化冲.png)
 

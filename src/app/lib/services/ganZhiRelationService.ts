@@ -33,7 +33,7 @@ export class GanZhiRelationService {
       });
     }
 
-    // 检查合关系
+    // 检查���关系
     const heRelation = relation.xianghe.find(h => h.stem === stem2);
     if (heRelation) {
       relations.push({
@@ -80,7 +80,7 @@ export class GanZhiRelationService {
     // 计算所有天干之间的关系
     for (let i = 0; i < stems.length; i++) {
       for (let j = 0; j < stems.length; j++) {
-        if (i !== j) {  // 避免自己和自己比较
+        if (i !== j) {  // 避免自己和自己��较
           const relations = this.calculateStemRelations(
             stems[i].stem,
             stems[i].pos,
@@ -342,4 +342,65 @@ export class GanZhiRelationService {
 
     return allRelations;
   }
+
+  // 添加通用的天干关系计算方法
+  static calculateGenericStemRelations(stem: { stem: Stem, pos: Position }, baziStems:{ stem: Stem, pos: Position }[]): RelationResult[] {
+    const allRelations: RelationResult[] = [];
+
+    // 计算与传入的天干的关系
+    for (const baziStem of baziStems) {
+        const relations = this.calculateStemRelations(stem.stem, stem.pos, baziStem.stem, baziStem.pos);
+        allRelations.push(...relations);
+    }
+
+    return allRelations;
+  }
+
+  // 添加通用的地支关系计算方法
+  static calculateGenericBranchRelations(branch: { branch: Branch, pos: Position }, baziBranches:{ branch: Branch, pos: Position }[]): RelationResult[] {
+    const allRelations: RelationResult[] = [];
+
+    // 计算与传入的地支的关系
+    for (const baziBranch of baziBranches) {
+        const relations = this.calculateBranchRelations(branch.branch, branch.pos, baziBranch.branch, baziBranch.pos);
+        allRelations.push(...relations);
+    }
+
+    // 检查三合局、三会局和三刑
+    const branchSet = [branch, ...baziBranches];
+
+    // 检查三合局
+    for (let i = 1; i < branchSet.length - 1; i++) {
+        for (let j = i + 1; j < branchSet.length; j++) {
+            const sanheResult = this.checkSanHe([branchSet[0], branchSet[i], branchSet[j]]);
+            if (sanheResult) {
+                allRelations.push(sanheResult);
+            }
+        }
+    }
+
+    // 检查三会局
+    for (let i = 1; i < branchSet.length - 1 ; i++) {
+        for (let j = i + 1; j < branchSet.length; j++) {
+            const sanhuiResult = this.checkSanHui([branchSet[0], branchSet[i], branchSet[j]]);
+            if (sanhuiResult) {
+                allRelations.push(sanhuiResult);
+            }
+        }
+    }
+
+    // 检查三刑
+    for (let i = 1; i < branchSet.length - 1; i++) {
+        for (let j = i + 1; j < branchSet.length; j++) {
+            const sanxingResult = this.checkSanXing([branchSet[0], branchSet[i], branchSet[j]]);
+            if (sanxingResult) {
+                allRelations.push(sanxingResult);
+            }
+        }
+    }
+
+    return allRelations;
+  }
 } 
+
+

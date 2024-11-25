@@ -2,11 +2,13 @@
 
 import { z } from 'zod';
 import { Gender } from '../types/enums';
+import { Position } from '../types/xiangyiEnums';
 import { UserInput } from '../types/interfaces';
 import { BaziService } from '../services/baziService';
 import { DaYunService } from '../services/dayunService';
 import { TenGodService } from '../services/tenGodService';
 import { StrengthService } from '../services/strengthService';
+import { RelationDisplayService } from '../services/relationDisplayService';
 import { FortuneService } from '../services/fortuneService';
 import { GanZhiRelationService } from '../services/ganZhiRelationService';
 import { stemWuXingMap } from '../constants/mapping';
@@ -48,7 +50,9 @@ export type State = {
     dayFortune?: string;
     daYunData?: string;
     tenGodData?: string;
-    baziRelations?: string;
+    baziItemRelations?: string;
+    dayunItemRelations?: string;
+    liunianItemRelations?: string;
   };
 };
 
@@ -150,26 +154,57 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
         result.bazi.hour.branch
       )
     };
-    console.dir({
-      stemRelations: baziRelations.stemRelations.map(r => ({
-        relationType: r.relationType,
-        isDirectional: r.isDirectional,
-        wuxing: r.wuxing,
-        members: r.members.map(m => ({
-          position: m.position,
-          value: m.value
-        }))
-      })),
-      branchRelations: baziRelations.branchRelations.map(r => ({
-        relationType: r.relationType,
-        isDirectional: r.isDirectional,
-        wuxing: r.wuxing,
-        members: r.members.map(m => ({
-          position: m.position,
-          value: m.value
-        }))
-      }))
-    }, { depth: null });
+    const baziItemRelations = RelationDisplayService.convertToGanZhiItemRelations(baziRelations, tenGodResult);
+
+    //大运关系计算
+    const dayunBaziRelations = {
+      stemRelations: GanZhiRelationService.calculateGenericStemRelations(
+        { stem: currentDaYun.stem, pos: Position.DAYUN },
+        [
+          { stem: result.bazi.year.stem, pos: Position.YEAR },
+          { stem: result.bazi.month.stem, pos: Position.MONTH },
+          { stem: result.bazi.day.stem, pos: Position.DAY },
+          { stem: result.bazi.hour.stem, pos: Position.HOUR }
+        ]
+      ),
+      branchRelations: GanZhiRelationService.calculateGenericBranchRelations(
+        { branch: currentDaYun.branch, pos: Position.DAYUN },
+        [
+          { branch: result.bazi.year.branch, pos: Position.YEAR },
+          { branch: result.bazi.month.branch, pos: Position.MONTH },
+          { branch: result.bazi.day.branch, pos: Position.DAY },
+          { branch: result.bazi.hour.branch, pos: Position.HOUR }
+        ]
+      )
+    };
+    const dayunItemRelations = RelationDisplayService.convertToGanZhiItemRelations(dayunBaziRelations, tenGodResult);
+
+    //流年关系计算
+    const liunianBaziRelations = {
+      stemRelations: GanZhiRelationService.calculateGenericStemRelations(
+        { stem: result.currentDayBazi.year.stem, pos: Position.LIUNIAN },
+        [ 
+          { stem: currentDaYun.stem, pos: Position.DAYUN },
+          { stem: result.bazi.year.stem, pos: Position.YEAR },
+          { stem: result.bazi.month.stem, pos: Position.MONTH },
+          { stem: result.bazi.day.stem, pos: Position.DAY },
+          { stem: result.bazi.hour.stem, pos: Position.HOUR }
+        ]
+      ),
+      branchRelations: GanZhiRelationService.calculateGenericBranchRelations(
+        { branch: result.currentDayBazi.year.branch, pos: Position.LIUNIAN },
+        [
+          { branch: result.bazi.year.branch, pos: Position.YEAR },
+          { branch: result.bazi.month.branch, pos: Position.MONTH },
+          { branch: result.bazi.day.branch, pos: Position.DAY },
+          { branch: result.bazi.hour.branch, pos: Position.HOUR }
+        ]
+      )
+    };
+    const liunianItemRelations = RelationDisplayService.convertToGanZhiItemRelations(liunianBaziRelations, tenGodResult);
+    // console.dir({ baziRelations }, { depth: null });
+    // console.dir({ dayunBaziRelations }, { depth: null });
+    // console.dir({ liunianBaziRelations }, { depth: null });
 
     return { 
       message: 'Success!', 
@@ -184,7 +219,9 @@ export async function createCustomerInfo(prevState: State, formData: FormData): 
         dayFortune: JSON.stringify(dayFortune),
         daYunData: JSON.stringify(dayunResult),
         tenGodData: JSON.stringify(tenGodResult),
-        baziRelations: JSON.stringify(baziRelations)
+        baziItemRelations: JSON.stringify(baziItemRelations),
+        dayunItemRelations: JSON.stringify(dayunItemRelations),
+        liunianItemRelations: JSON.stringify(liunianItemRelations)
       } 
     };
   } catch (error) {

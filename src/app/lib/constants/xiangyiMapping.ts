@@ -17,12 +17,32 @@ export const XIANGYI_MAPPING = {
     [Position.DAY]: {
       sixRelation: SixRelation.SELF,      // 自己
       bodyPart: BodyPart.LOWER_BELLY,     // 小腹
-      // 日柱没有年龄范围
+      ageRange: ''        // 日柱没有年龄范围
     },
     [Position.HOUR]: {
       sixRelation: SixRelation.FIRST_CHILD, // 长子
       bodyPart: BodyPart.THIGH,             // 大腿
       ageRange: AgeRange.RANGE_46_54        // 46-54岁
+    },
+    [Position.DAYUN]: {
+      sixRelation: '', 
+      bodyPart: '',             
+      ageRange: ''        
+    },
+    [Position.LIUNIAN]: {
+      sixRelation: '', 
+      bodyPart: '',             
+      ageRange: ''        
+    },
+    [Position.LIUYUE]: {
+      sixRelation: '', 
+      bodyPart: '',             
+      ageRange: ''        
+    },
+    [Position.LIURI]: {
+      sixRelation: '', 
+      bodyPart: '',             
+      ageRange: ''        
     }
   },
   
@@ -47,6 +67,26 @@ export const XIANGYI_MAPPING = {
       sixRelation: SixRelation.SECOND_CHILD, // 次子
       bodyPart: BodyPart.CALF_FOOT,          // 小腿和脚
       ageRange: AgeRange.RANGE_55_PLUS       // 55岁及以后
+    },
+    [Position.DAYUN]: {
+      sixRelation: '', 
+      bodyPart: '',             
+      ageRange: ''        
+    },
+    [Position.LIUNIAN]: {
+      sixRelation: '', 
+      bodyPart: '',             
+      ageRange: ''        
+    },
+    [Position.LIUYUE]: {
+      sixRelation: '', 
+      bodyPart: '',             
+      ageRange: ''        
+    },
+    [Position.LIURI]: {
+      sixRelation: '', 
+      bodyPart: '',             
+      ageRange: ''        
     }
   }
 } as const;

@@ -3,7 +3,11 @@ export enum Position {
   YEAR = '年柱',
   MONTH = '月柱',
   DAY = '日柱',
-  HOUR = '时柱'
+  HOUR = '时柱',
+  DAYUN = '大运',
+  LIUNIAN = '流年',
+  LIUYUE = '流月',
+  LIURI = '流日'
 } 
 
 export enum SixRelation {

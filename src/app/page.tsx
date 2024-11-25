@@ -7,6 +7,7 @@ import LuckDisplay from './ui/LuckDisplay';
 import LoadingState from './ui/LoadingState';
 import TenGodDisplay from './ui/TenGodDisplay';
 import { DaYunDisplay } from './ui/DaYunDisplay';
+import { GanZhiRelationDisplay } from './ui/GanZhiRelationDisplay';
 
 export default function Home() {
   const initialState: State = { message: null, errors: {}, values: {} };
@@ -225,6 +226,36 @@ export default function Home() {
                       </div>
                     );
                   })()}
+                </div>
+              )}
+
+              {/* 八字关系 */}
+              {state.values.baziItemRelations && (
+                <div className="mt-4">
+                  <GanZhiRelationDisplay 
+                    title="八字关系" 
+                    relations={JSON.parse(state.values.baziItemRelations)}
+                  />
+                </div>
+              )}
+
+              {/* 大运关系 */}
+              {state.values.dayunItemRelations && (
+                <div className="mt-4">
+                  <GanZhiRelationDisplay 
+                    title="大运关系" 
+                    relations={JSON.parse(state.values.dayunItemRelations)}
+                  />
+                </div>
+              )}
+
+              {/* 流年关系 */}
+              {state.values.liunianItemRelations && (
+                <div className="mt-4">
+                  <GanZhiRelationDisplay 
+                    title="流年关系" 
+                    relations={JSON.parse(state.values.liunianItemRelations)}
+                  />
                 </div>
               )}
             </>

@@ -1,17 +1,25 @@
-import { Stem, Branch, TenGod, WuXing, Direction, RelationType } from "./enums";
+import { Stem, Branch, TenGod, WuXing, Direction, RelationType, WuXingColor } from "./enums";
 import { Position, SixRelation, BodyPart, AgeRange } from "./xiangyiEnums";
 
-
+//展示用
 export interface GanZhiItem {  
   position: Position;
   name: Stem | Branch;
-  tenGod: TenGod;
-  sixRelation: SixRelation;
-  bodyPart: BodyPart;
-  ageRange?: AgeRange;
+  color: string;
+  tenGod: TenGod[];
+  sixRelation: SixRelation | '';
+  bodyPart: BodyPart | '';
+  ageRange: AgeRange | '';
+};
+
+export interface GanZhiItemRelation {  
+  members: GanZhiItem[];
+  relationType: RelationType;
+  isDirectional: boolean;    // 是否为有方向性的关系（生克是有方向的，其他都是无方向的）
+  wuxing?: WuXing;          // 合、三合、三会产生的五行
 };
   
-
+//计算用
 export interface StemRelation {
   sheng: Stem[]; // 生
   ke: Stem[];    // 克
