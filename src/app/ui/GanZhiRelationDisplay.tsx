@@ -1,4 +1,4 @@
-import { GanZhiItem, GanZhiItemRelation } from '../types/gzRelation';
+import { GanZhiItem, GanZhiItemRelation } from '../lib/types/gzRelation';
 
 interface SectionProps {
   title: string;
