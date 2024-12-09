@@ -1,6 +1,6 @@
-import Footer from './ui/Footer';
+import Footer from '../ui/Footer';
 import type { Metadata } from "next";
-import "./ui/globals.css";
+import "../ui/globals.css";
 import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {

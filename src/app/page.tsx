@@ -1,13 +1,13 @@
 'use client'
 
-import { createCustomerInfo, State } from "./lib/utils/actions";
+import { createCustomerInfo, State } from "../lib/utils/actions";
 import { useActionState } from 'react';
 import React, { useEffect } from 'react';
-import LuckDisplay from './ui/LuckDisplay';
-import LoadingState from './ui/LoadingState';
-import TenGodDisplay from './ui/TenGodDisplay';
-import { DaYunDisplay } from './ui/DaYunDisplay';
-import { GanZhiRelationDisplay } from './ui/GanZhiRelationDisplay';
+import LuckDisplay from '../ui/LuckDisplay';
+import LoadingState from '../ui/LoadingState';
+import TenGodDisplay from '../ui/TenGodDisplay';
+import { DaYunDisplay } from '../ui/DaYunDisplay';
+import { GanZhiRelationDisplay } from '../ui/GanZhiRelationDisplay';
 
 export default function Home() {
   const initialState: State = { message: null, errors: {}, values: {} };
